@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../work/otopark-server/otoParkServer/.idea/otoParkServer.iml" filepath="$PROJECT_DIR$/../../work/otopark-server/otoParkServer/.idea/otoParkServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ua-iamai-cg-python.iml" filepath="$PROJECT_DIR$/.idea/ua-iamai-cg-python.iml" />
     </modules>
   </component>

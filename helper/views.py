@@ -1,8 +1,13 @@
+import re
+
+import idna
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from helper.models import UserData, NotesData
+
+EMAIL_REGEX = '^[a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
 
 
 @csrf_exempt
@@ -16,9 +21,9 @@ def signup(request):
     if email is not None and name is not None and password is not None:
         # validate everything
         user_instance = UserData.objects.create(
-            email=email,
-            name=name,
-            password=password
+            email=str(idna.encode(email)),
+            name=str(idna.encode(name)),
+            password=str(idna.encode(password))
         )
         user_instance.save()
 
@@ -41,8 +46,8 @@ def take_notes(request):
 
     # validate everything
     note_instance = NotesData.objects.create(
-        title=title,
-        text=text
+        title=str(idna.encode(title)),
+        text=str(idna.encode(text))
     )
     note_instance.save()
 
@@ -52,6 +57,13 @@ def take_notes(request):
     })
 
 
+def is_valid_email(email):
+    if email:
+        match = re.match(EMAIL_REGEX, email)
+        if match is None:
+            return False
+    else:
+        return False
 
 
 
