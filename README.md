@@ -4,7 +4,7 @@
 
 2. Current Solution
 
-a. Email can be in any language just a valid format (email@email.com), Python Idna library is used to encode to universal format. This is saved to PostgresSQL
+a. Email can be in any language just a valid format (email@email.com), Python Idna library is used to encode to universal format. This is saved to PostgresSQL(Database)
 
 b. Retrieve operation is also based on same Python Idna library which can be decoded back to the entered format.
 
