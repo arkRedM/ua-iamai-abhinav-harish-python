@@ -19,12 +19,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from helper.views import signup
+from helper.views import signup, email_list
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     url('^signup/$', signup),
+    url('^list/$', email_list),
 
     # url('^/$')
 ]

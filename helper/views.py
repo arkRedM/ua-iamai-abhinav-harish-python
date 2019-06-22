@@ -18,12 +18,18 @@ def signup(request):
 
     password = request.POST.get('password')
 
-    if email is not None and name is not None and password is not None:
+    email_enc, validity = is_valid_email(email)
+    name_enc = idna.encode(name).decode('utf-8')
+    password_enc = idna.encode(password).decode('utf-8')
+
+    print(email_enc)
+
+    if email_enc is not None and name is not None and password is not None:
         # validate everything
         user_instance = UserData.objects.create(
-            email=str(idna.encode(email)),
-            name=str(idna.encode(name)),
-            password=str(idna.encode(password))
+            email=email_enc,
+            name=name_enc,
+            password=password_enc
         )
         user_instance.save()
 
@@ -46,7 +52,7 @@ def take_notes(request):
 
     # validate everything
     note_instance = NotesData.objects.create(
-        title=str(idna.encode(title)),
+        title=idna.encode(title),
         text=str(idna.encode(text))
     )
     note_instance.save()
@@ -57,13 +63,42 @@ def take_notes(request):
     })
 
 
+@require_http_methods(['GET'])
+def email_list(request):
+    email_list = []
+    for user_ins in UserData.objects.all():
+        temp_json = {
+            'email': get_decoded_email(user_ins.email)
+        }
+        email_list.append(temp_json)
+
+    return JsonResponse(email_list, safe=False)
+
+
 def is_valid_email(email):
     if email:
-        match = re.match(EMAIL_REGEX, email)
-        if match is None:
-            return False
+        try:
+            name_part = email.split('@')[0]
+            domain_part = email.split('@')[1]
+            domain_name = domain_part.split('.')[0]
+            domain_tld = domain_part.split('.')[1]
+
+            print('a', idna.encode(name_part).decode('utf-8') + '@' + idna.encode(domain_name).decode('utf-8') + '.' + idna.encode(domain_tld).decode('utf-8'))
+
+            return idna.encode(name_part).decode('utf-8') + '@' + idna.encode(domain_name).decode('utf-8') + '.' + idna.encode(domain_tld).decode('utf-8'), True
+        except:
+            return None, False
     else:
-        return False
+        return None, False
 
 
+def get_decoded_email(email_encoded):
+    print(email_encoded)
+    name_part = email_encoded.split('@')[0]
+    domain_part = email_encoded.split('@')[1]
+    domain_name = domain_part.split('.')[0]
+    domain_tld = domain_part.split('.')[1]
+
+    return idna.decode(name_part) + '@' + idna.decode(domain_name) + '.' + \
+           idna.decode(domain_tld)
 

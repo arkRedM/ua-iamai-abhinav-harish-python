@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from helper.models import UserData
+
+
+class UserDataAdmin(admin.ModelAdmin):
+    list_display = ['id']
+    search_fields = ['id']
+
+
+admin.site.register(UserData, UserDataAdmin)
