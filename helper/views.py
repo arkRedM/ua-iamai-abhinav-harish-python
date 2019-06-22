@@ -68,7 +68,8 @@ def email_list(request):
     email_list = []
     for user_ins in UserData.objects.all():
         temp_json = {
-            'email': get_decoded_email(user_ins.email)
+            'email': get_decoded_email(user_ins.email),
+            'name': idna.decode(user_ins.name)
         }
         email_list.append(temp_json)
 
